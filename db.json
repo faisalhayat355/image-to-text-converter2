@@ -1,16 +1,22 @@
-{ 
-  "imageToText": { 
-    "data": [ 
+{
+  "imageToText": {
+    "data": [
       {
-        "id": "1738905288865",
+        "id": "1738925780079",
         "fileName": "23044457.jpg",
-        "text": "CASH RECEIPT\nShop Name Shop Address\nDate: MM/DD/YYYY\nManager: John Doe\nCashier: Jane Doe\nDescription Price\nLorem ipsum $9.25\nDolor sit amet $19.40\nConsectetur adipiscing $14.55\nElit ed do eiusmod $1.90\nTempor incididunt $7.55\nUt labore et dolore $22.00\nMagna aliqua $13.15\nTotal $87.80\nTax $0.00\nTnank you for shopping!",
-        "timestamp": "2025-02-07T05:14:48.865Z"
-      } 
-    ], 
-    "meta": { 
-      "total": 1,
-      "lastUpdated": "2025-02-07T05:14:48.865Z"
-    } 
-  } 
-} 
+        "text": "CASH RECEIPT\nShop Name SuperMarket\nShop Address XYZ Patna\nDate: 11/02/2000\nManager: John Doe\nCashier: Jane Doe\nDescription Price\nLoremipsum $925\nDolor sit amet $19.40\nConsectetur adipiscing $1455\nElited do eiusmod $190\nTemporincididunt $7.55\nUt labore et dolore $2200\nMagna liqua $13.15\nTotal $87.80\nTax $000\nTank you for shopping!",
+        "timestamp": "2025-02-07T10:56:20.079Z"
+      },
+      {
+        "id": "1738926263271",
+        "fileName": "WhatsApp Image 2025-02-07 at 4.31.22 PM.jpeg",
+        "text": "Details of Receiver (Billed to) Inv.Date : 17/12/2024\nDR BINAY KUMAR SHC 1011 Inv.Time : 12:12:45PM\nPAHRPUR CHAKBAHRO ROARD NEAR GIRLS SCHOOL,SHC \nSI NO PARTICULARS PACK RACK EXP BATCH MRP N.RATE NET AMT\n1 STON 1B6 1X 1 56 12-25 L1164036 331.01 265.01 265.01\n2 FLAGYL ER TAB 1X 10 100/11 9-25  HAHD4004 66.61 55.00 165.01\n3 FLAGYL 400MG TAB 1X15 100/11 6-27 FLA24040 25.53 21.00 84.00\n4 VIZYLAC RICH CAP 1 X 10 A 3-26 2407706TT 183.85 155.00 464.99\n5 CLOFF 250 MG TAB 1 X 10 C 7-25 2308001181 267.56 208.00 831.98\n6 MACPREAD 16MG TAB 1X 10 74 4-26 3 13240191A 110.86 88.00 263.99\n7 ZENFLOX-UTI 1X 10 80 9-25 1 C3HSW082 208.89 167.01 167.01\n8 CLOFF 250 MG TAB 1X 10 Cc 9-25 RE GA3584001 267.56 208.00 623.99\n9 FEBUSET 40 TAB 1 X 10 F 3-26 3 706RA2403 124.00 99.00 296.99\n10 AMLOKINDAT (15) 1 X15 17/87 6-26 3. 5 G65X059 53.95 41.00 123.01\n11 URILISER MBB SYP 1 X 1  5-26 1 LMBR-25 242.65 193.99 193.99\n12 EPILEX SYP 1 X 1  10-25 2 ALJ0216 145.60 116.00 232.00\n Total Amt ; 3712.00\nPLEASE PAY : Rs. Three Thousand Seven Hundred Twelve Only.\nRemarks : GOODS ONES SOLD WILL NOT BE TAKEN BACK",
+        "timestamp": "2025-02-07T11:04:23.271Z"
+      }
+    ],
+    "meta": {
+      "total": 2,
+      "lastUpdated": "2025-02-07T11:34:51.757Z"
+    }
+  }
+}
