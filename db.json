@@ -1,0 +1,16 @@
+{ 
+  "imageToText": { 
+    "data": [ 
+      {
+        "id": "1738905288865",
+        "fileName": "23044457.jpg",
+        "text": "CASH RECEIPT\nShop Name Shop Address\nDate: MM/DD/YYYY\nManager: John Doe\nCashier: Jane Doe\nDescription Price\nLorem ipsum $9.25\nDolor sit amet $19.40\nConsectetur adipiscing $14.55\nElit ed do eiusmod $1.90\nTempor incididunt $7.55\nUt labore et dolore $22.00\nMagna aliqua $13.15\nTotal $87.80\nTax $0.00\nTnank you for shopping!",
+        "timestamp": "2025-02-07T05:14:48.865Z"
+      } 
+    ], 
+    "meta": { 
+      "total": 1,
+      "lastUpdated": "2025-02-07T05:14:48.865Z"
+    } 
+  } 
+} 
