@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import {Hourglass} from "react-loader-spinner";
+import { Hourglass } from "react-loader-spinner";
 import Tesseract from "tesseract.js";
 import axios from "axios";
 import {Modal,Button,Card,Container,Row,Col,Badge,Tooltip,OverlayTrigger,} from "react-bootstrap";
-import {FaCopy,FaUpload,FaTrash,FaHistory,FaImage,FaSearch,FaDownload,FaCode,FaAlignLeft,FaEye,FaCheck,FaExclamationTriangle,} from "react-icons/fa";
+import {FaCopy,FaUpload,FaTrash,FaHistory,FaImage,FaSearch,FaDownload,FaCode,FaAlignLeft,FaEye,FaCheck, FaExclamationTriangle} from "react-icons/fa";
 
 const API_BASE_URL = "http://localhost:3001";
 const API_ENDPOINT = "imageToText";
@@ -13,8 +13,9 @@ interface ImageToTextData {
   fileName: string;
   text: string;
   timestamp: string;
-  // imageData: string;
+  imageData: string;
 }
+
 interface ImageToTextState {
   data: ImageToTextData[];
   meta: {
@@ -22,11 +23,13 @@ interface ImageToTextState {
     lastUpdated: string | null;
   };
 }
+
 interface ToastMessage {
   id: number;
   message: string;
   type: "success" | "error" | "info";
 }
+
 interface ImageProcessingState {
   image: string | null;
   fileName: string;
@@ -35,6 +38,7 @@ interface ImageProcessingState {
   isUploading: boolean;
   progress: number;
 }
+
 interface UIState {
   searchTerm: string;
   viewMode: "text" | "json";
@@ -76,7 +80,7 @@ function App() {
   const toastIdCounter = useRef(0);
 
   const updateProcessingState = (newState: Partial<ImageProcessingState>) => {
-    setProcessing((prev: ImageProcessingState) => ({...prev,...newState}));
+    setProcessing((prev: ImageProcessingState) => ({ ...prev, ...newState }));
   };
 
   const updateUIState = (newState: Partial<UIState>) => {
@@ -98,6 +102,7 @@ function App() {
       type,
     };
     setToasts((currentToasts: ToastMessage[]) => [...currentToasts, newToast]);
+
     setTimeout(() => {
       setToasts((currentToasts: ToastMessage[]) =>
         currentToasts.filter((toast: ToastMessage) => toast.id !== newToast.id)
@@ -127,7 +132,7 @@ function App() {
         fileName: fileName || "Untitled",
         text: extractedText || "",
         timestamp: new Date().toISOString(),
-        // imageData: imageData || "",
+        imageData: imageData || "",
       };
 
       const updatedData = {
@@ -157,7 +162,7 @@ function App() {
       };
 
       await axios.put(`${API_BASE_URL}/${API_ENDPOINT}`, updatedData);
-      setImageToText(updatedData); 
+      setImageToText(updatedData);
       updateUIState({ showDeleteModal: false, itemToDelete: null });
       showToast("Item deleted successfully", "success");
     } catch (error) {
@@ -170,10 +175,12 @@ function App() {
       const element = document.createElement("a");
       const file = new Blob([text], { type: "text/plain" });
       element.href = URL.createObjectURL(file);
+
       // Format date safely
       const date = new Date(timestamp);
       const formattedDate = date.toISOString().split("T")[0];
       element.download = `extracted-text-${formattedDate}.txt`;
+
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
@@ -184,6 +191,7 @@ function App() {
 
   const formatExtractedText = (text: string | undefined) => {
     if (!text) return "";
+
     return text
       .split("\n")
       .filter((line) => line.trim())
@@ -194,10 +202,12 @@ function App() {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     if (!file.type.startsWith("image/")) {
       showToast("Please upload an image file", "error");
       return;
     }
+
     try {
       updateProcessingState({ isUploading: true });
       showToast("Uploading image...", "info");
@@ -206,9 +216,11 @@ function App() {
       reader.onload = async (event: ProgressEvent<FileReader>) => {
         const base64Image = event.target?.result as string;
         updateProcessingState({ image: base64Image });
+
         try {
           updateProcessingState({ isLoading: true, progress: 0 });
           showToast("Processing image...", "info");
+
           const { data } = await Tesseract.recognize(file, "eng", {
             logger: (m: { status: string; progress: number }) => {
               if (m.status === "recognizing text") {
@@ -218,6 +230,7 @@ function App() {
               }
             },
           });
+
           const formattedText = data.blocks
             ?.map((block: { text: string }) => block.text.trim())
             .filter(Boolean)
@@ -268,7 +281,7 @@ function App() {
           fileName: processing.fileName || "",
           text: processing.text || "",
           timestamp: new Date().toISOString(),
-          // imageData: processing.image || "",
+          imageData: processing.image || "",
         },
         null,
         2
@@ -318,18 +331,34 @@ function App() {
               <FaImage className="me-2" />
               Image to Text Converter
             </h3>
+            
           </div>
         </Card.Header>
+
         <Card.Body className="app-card-body">
           <div className="text-center mb-4">
             <div className="d-flex justify-content-center gap-3">
-              <OverlayTrigger placement="top" overlay={<Tooltip>Upload an image to extract text</Tooltip>}>
-                <Button variant="primary" onClick={() => fileInputRef.current?.click()} className="d-flex align-items-center gap-2 px-4 py-2">
-                  <FaUpload/> Choose Image
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip>Upload an image to extract text</Tooltip>}
+              >
+                <Button
+                  variant="primary"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="d-flex align-items-center gap-2 px-4 py-2"
+                >
+                  <FaUpload /> Choose Image
                 </Button>
               </OverlayTrigger>
-              <OverlayTrigger placement="top" overlay={<Tooltip>Clear current content</Tooltip>}>
-                <Button variant="secondary" onClick={handleClear} className="d-flex align-items-center gap-2 px-4 py-2">
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip>Clear current content</Tooltip>}
+              >
+                <Button
+                  variant="secondary"
+                  onClick={handleClear}
+                  className="d-flex align-items-center gap-2 px-4 py-2"
+                >
                   <FaTrash /> Clear
                 </Button>
               </OverlayTrigger>
@@ -342,25 +371,35 @@ function App() {
             )}
           </div>
 
-          <input type="file" accept="image/*" onChange={handleImageChange} ref={fileInputRef} style={{ display: "none" }}/>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            ref={fileInputRef}
+            style={{ display: "none" }}
+          />
+
           {(processing.image || processing.text) && (
             <Row className="g-4">
               <Col md={6}>
                 <div className="content-container">
                   <div className="content-header">
                     <h5 className="mb-0 text-primary">Selected Image</h5>
-                    <Button className="action-button" onClick={() => {
+                    <Button
+                      className="action-button"
+                      onClick={() => {
                         updateUIState({
                           selectedItem: {
                             id: "current",
                             text: processing.text,
                             timestamp: new Date().toISOString(),
-                            // imageData: processing.image!,
+                            imageData: processing.image!,
                             fileName: processing.fileName,
                           },
                         });
                         updateUIState({ showModal: true });
-                      }}>
+                      }}
+                    >
                       <FaEye />
                     </Button>
                   </div>
@@ -368,12 +407,21 @@ function App() {
                     <div className="image-container">
                       {processing.isUploading && (
                         <div className="loading-overlay">
-                          <Hourglass visible={true} height="60" width="60" colors={["#306cce", "#72a1ed"]}/>
+                          <Hourglass
+                            visible={true}
+                            height="60"
+                            width="60"
+                            colors={["#306cce", "#72a1ed"]}
+                          />
                           <div className="loading-text">Uploading image...</div>
                         </div>
                       )}
                       {processing.image && (
-                        <img src={processing.image} alt="Selected" className="image-preview"/>
+                        <img
+                          src={processing.image}
+                          alt="Selected"
+                          className="image-preview"
+                        />
                       )}
                     </div>
                   </div>
@@ -384,13 +432,46 @@ function App() {
                   <div className="content-header">
                     <h5 className="mb-0 text-primary">Extracted Text</h5>
                     <div className="d-flex align-items-center gap-2">
-                      <OverlayTrigger placement="left" overlay={<Tooltip>{ui.viewMode === "text"? "View in db.json format": "Switch to text view"}</Tooltip>}>
-                        <Button className="action-button" onClick={() => updateUIState({ viewMode:ui.viewMode === "text" ? "json" : "text",})}>
-                          {ui.viewMode === "text" ? (<FaCode />) : (<FaAlignLeft />)}
+                      <OverlayTrigger
+                        placement="left"
+                        overlay={
+                          <Tooltip>
+                            {ui.viewMode === "text"
+                              ? "View in db.json format"
+                              : "Switch to text view"}
+                          </Tooltip>
+                        }
+                      >
+                        <Button
+                          className="action-button"
+                          onClick={() =>
+                            updateUIState({
+                              viewMode:
+                                ui.viewMode === "text" ? "json" : "text",
+                            })
+                          }
+                        >
+                          {ui.viewMode === "text" ? (
+                            <FaCode />
+                          ) : (
+                            <FaAlignLeft />
+                          )}
                         </Button>
                       </OverlayTrigger>
-                      <OverlayTrigger placement="left" overlay={<Tooltip>Copy to clipboard</Tooltip>}>
-                        <Button className="action-button" onClick={() =>copyToClipboard( ui.viewMode === "text" ? processing.text : getJsonData())}>
+                      <OverlayTrigger
+                        placement="left"
+                        overlay={<Tooltip>Copy to clipboard</Tooltip>}
+                      >
+                        <Button
+                          className="action-button"
+                          onClick={() =>
+                            copyToClipboard(
+                              ui.viewMode === "text"
+                                ? processing.text
+                                : getJsonData()
+                            )
+                          }
+                        >
                           <FaCopy />
                         </Button>
                       </OverlayTrigger>
@@ -399,11 +480,19 @@ function App() {
                   <div className="content-body">
                     {processing.isLoading ? (
                       <div className="loading-container">
-                        <Hourglass visible={true} height="80" width="80" colors={["#306cce", "#72a1ed"]}/>
+                        <Hourglass
+                          visible={true}
+                          height="80"
+                          width="80"
+                          colors={["#306cce", "#72a1ed"]}
+                        />
                         <div className="loading-text">Processing image...</div>
                         <div className="progress-container">
                           <div className="progress">
-                            <div className="progress-bar" style={{ width: `${processing.progress}%` }}/>
+                            <div
+                              className="progress-bar"
+                              style={{ width: `${processing.progress}%` }}
+                            />
                           </div>
                           <div className="progress-text">
                             {processing.progress}% complete
@@ -411,13 +500,21 @@ function App() {
                         </div>
                       </div>
                     ) : (
-                      <div className={ ui.viewMode === "json"
-                            ? "json-content" : "text-content"}>
+                      <div
+                        className={
+                          ui.viewMode === "json"
+                            ? "json-content"
+                            : "text-content"
+                        }
+                      >
                         {ui.viewMode === "text" ? (
-                          <div dangerouslySetInnerHTML={{
+                          <div
+                            dangerouslySetInnerHTML={{
                               __html: formatExtractedText(
                                 processing.text || ""
-                              ),}}/>
+                              ),
+                            }}
+                          />
                         ) : (
                           <pre>{getJsonData()}</pre>
                         )}
@@ -443,7 +540,15 @@ function App() {
                 </div>
                 <div className="search-container">
                   <FaSearch className="search-icon" />
-                  <input type="text" className="search-input" placeholder="Search by text or filename..." value={ui.searchTerm} onChange={(e) => updateUIState({ searchTerm: e.target.value })}/>
+                  <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Search by text or filename..."
+                    value={ui.searchTerm}
+                    onChange={(e) =>
+                      updateUIState({ searchTerm: e.target.value })
+                    }
+                  />
                 </div>
               </Card.Header>
               <Card.Body>
@@ -461,23 +566,49 @@ function App() {
                         </div>
                         <div className="text-content-preview">{item.text}</div>
                         <div className="d-flex gap-2 mt-3">
-                          <OverlayTrigger placement="top" overlay={<Tooltip>View details</Tooltip>}>
-                            <Button className="action-button" onClick={() => viewItemDetails(item)}>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>View details</Tooltip>}
+                          >
+                            <Button
+                              className="action-button"
+                              onClick={() => viewItemDetails(item)}
+                            >
                               <FaEye />
                             </Button>
                           </OverlayTrigger>
-                          <OverlayTrigger placement="top" overlay={<Tooltip>Copy text</Tooltip>}>
-                            <Button className="action-button" onClick={() => copyToClipboard(item.text)}>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>Copy text</Tooltip>}
+                          >
+                            <Button
+                              className="action-button"
+                              onClick={() => copyToClipboard(item.text)}
+                            >
                               <FaCopy />
                             </Button>
                           </OverlayTrigger>
-                          <OverlayTrigger placement="top" overlay={<Tooltip>Download text</Tooltip>}>
-                            <Button className="action-button" onClick={() => downloadText(item.text, item.timestamp)}>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>Download text</Tooltip>}
+                          >
+                            <Button
+                              className="action-button"
+                              onClick={() =>
+                                downloadText(item.text, item.timestamp)
+                              }
+                            >
                               <FaDownload />
                             </Button>
                           </OverlayTrigger>
-                          <OverlayTrigger placement="top" overlay={<Tooltip>Delete item</Tooltip>}>
-                            <Button className="action-button danger" onClick={() => handleDeleteItem(item.id)}>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>Delete item</Tooltip>}
+                          >
+                            <Button
+                              className="action-button danger"
+                              onClick={() => handleDeleteItem(item.id)}
+                            >
                               <FaTrash />
                             </Button>
                           </OverlayTrigger>
@@ -497,7 +628,11 @@ function App() {
       </Card>
 
       {/* View Details Modal */}
-      <Modal show={ui.showModal && ui.selectedItem !== null} onHide={closeModals} size="lg">
+      <Modal
+        show={ui.showModal && ui.selectedItem !== null}
+        onHide={closeModals}
+        size="lg"
+      >
         <Modal.Header closeButton>
           <Modal.Title>
             <span className="text-primary">{ui.selectedItem?.fileName}</span>
@@ -511,13 +646,13 @@ function App() {
         <Modal.Body>
           {ui.selectedItem && (
             <>
-              {/* <div className="image-container mb-4">
+              <div className="image-container mb-4">
                 <img
                   src={ui.selectedItem.imageData}
                   alt={ui.selectedItem.fileName}
                   className="image-preview"
                 />
-              </div> */}
+              </div>
               <div className="mb-4">
                 <h6 className="text-primary mb-2">Text Content:</h6>
                 <div className="text-content">
@@ -536,11 +671,22 @@ function App() {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={() => ui.selectedItem && copyToClipboard(getJsonData(ui.selectedItem))}>
+          <Button
+            variant="primary"
+            onClick={() =>
+              ui.selectedItem && copyToClipboard(getJsonData(ui.selectedItem))
+            }
+          >
             <FaCopy className="me-2" />
             Copy JSON
           </Button>
-          <Button variant="success"onClick={() => ui.selectedItem && downloadText(ui.selectedItem.text, ui.selectedItem.timestamp)}>
+          <Button
+            variant="success"
+            onClick={() =>
+              ui.selectedItem &&
+              downloadText(ui.selectedItem.text, ui.selectedItem.timestamp)
+            }
+          >
             <FaDownload className="me-2" />
             Download Text
           </Button>
@@ -566,7 +712,10 @@ function App() {
           <Button variant="secondary" onClick={closeModals}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => ui.itemToDelete && deleteItem(ui.itemToDelete)}>
+          <Button
+            variant="danger"
+            onClick={() => ui.itemToDelete && deleteItem(ui.itemToDelete)}
+          >
             Delete
           </Button>
         </Modal.Footer>
